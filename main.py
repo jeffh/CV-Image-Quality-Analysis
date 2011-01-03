@@ -5,19 +5,19 @@ import cv
 import os
 from windows import (EdgeThresholdTweaker, DerivativeTweaker, \
     ColorHistograms, HistogramWindow)
-from constants import edge_threshold
+#from constants import edge_threshold
 import papers
 from features import noise, blur, contrast, composition, faces
 from training_data import TrainingData
 from logger import FileLogger, HtmlLogger, MultiLogger
 from optparse import OptionParser
 
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 measurements = (
     contrast,
     noise,
-    #blur,
-    #composition,
+    blur,
+    composition,
     #faces, # => under composition
 )
 max_size = (640, 480) # set to None to use original image sizes (can take awhile!)
@@ -147,7 +147,7 @@ def process(process_dir=None):
     
     logger = MultiLogger(
         FileLogger(),
-        HtmlLogger(open('output.html', 'w+'), '/Users/jeff/Desktop/china-day6/thumb/')
+        HtmlLogger(open('output.html', 'w+'), os.path.abspath('thumb'))
     )
     max_size = None#(800, 600)
     for obj in process_dir:
@@ -165,7 +165,7 @@ def main(progname, *args):
     parser.add_option("-f", "--file", dest="filename", default=None,
         help="analyze a given FILE ending in .jpg or .jpeg", metavar="FILE")
     parser.add_option("-i", "--imageset", dest="imageset", default=None,
-        help="Runs on a predefined set of algorithms (li,chow,china,flickr-set)")
+        help="Runs on a predefined set of algorithms (li,chow,china,custom)")
     parser.add_option("-d", "--debug", dest="debug", action="store_true", default=False,
         help="Enable visual debugging.")
     parser.add_option("-t", "--type", dest="type", default="all",

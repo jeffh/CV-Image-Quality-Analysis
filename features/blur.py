@@ -207,18 +207,18 @@ def remove_useless_points(im):
     return image.neighbor_map(im, pixel_remove)
 
 # ri_threshold = 0.2 is too weak for large images
-def boolean(score, ri_threshold=0.1, d_threshold=0.2, d_high_threshold=0.7):
+def boolean(score):
     # the focus regions should cover 15%+ of the screen
     # the density of the regions should be > 20% point/pixel
     region_image_ratio, density, density_std, saturation_score, light_score = score
-    if density > d_high_threshold:
+    if density > 0.7:
         return False
     if light_score > 0.5:
         return True
-    return (region_image_ratio <= ri_threshold and \
-        #(density < d_threshold or density_std < d_threshold)) \
-        (density - density_std < d_threshold)) \
-        or saturation_score > 0.8
+    return (region_image_ratio <= 0.1 and \
+        (density - density_std < 0.2))
+        # TODO: saturation_score needs more tweaking
+        #or saturation_score > 0.8
     #return score < d_threshold
 
 requires_result_from = [] # noise perhaps???
@@ -254,7 +254,7 @@ def measure(im, debug=False):
             image.show(mask, "5.6. Mask(focused AND invert(threshold(im, 16)))")
             image.show(saturation, "6. Set(<5.3>, 0, <5.6>)")
 
-        saturation_score = cv.Sum(saturation)[0] / float(npixels * 32)
+        saturation_score = cv.Sum(saturation)[0] / float(npixels * 255)
         print "\tSaturation Score:", saturation_score
         
     # light exposure
